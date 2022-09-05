@@ -1,5 +1,5 @@
 // import Itachi from "../photos/photo.jpg";
-/*import bg from '../slideIMG/5.jpg';*/
+import bg from '../slideIMG/5.jpg';
 import "../css/family.css";
 import { Link } from "react-router-dom"
 import { useState } from "react";
@@ -8,9 +8,13 @@ import Itemcard from "./itemcard";
 import data from "./datal";
 import Cart from "./cart";
 
+import PopUpBook from './PopUpBook/PopUpBook';
+import popup from './popup.module.css'
+import { useNavigate } from 'react-router-dom'
+import homeBook from './PopUpBook/Home_Booking.module.css';
+
 
 function Luxury(props){
-    const [checkIn, setCheckIn] = useState("");
     const [checkOut, setCheckOut] = useState("");
 
 
@@ -27,10 +31,85 @@ function Luxury(props){
         
     }
 
+    //Added Items
+    
+    const navigate = useNavigate()
+    const [Hotel, setHotel] = useState([])
+    function gallery(data) {
+        navigate('/hotel_info', { state: { data: data } })
+    }
+
+    let bookPopUp = (
+        <div className={popup.popup}>
+            <div className={popup.header}>
+                <h3>R {HotelData.price}</h3>
+                <label>/ {HotelData.duration}</label>
+            </div>
+            <div className={popup.formGroup}>
+                <label>Check-in Date <span>*</span></label>
+                <input type="date" name="checkIn" className={popup.formControl} value={CheckIn.checkIn} onChange={handleChange} />
+            </div>
+
+            <div className={popup.formGroup}>
+                <label>Check-out Date <span>*</span></label>
+                <input type="date" name="checkOut" className={popup.formControl} value={CheckIn.checkOut} onChange={handleChange} />
+            </div>
+
+            <div className={popup.formGroup}>
+                <label>Adult</label>
+                <input type="number" name="adult" className={popup.formControl} value={CheckIn.adult} onChange={handleChange} />
+            </div>
+
+            <div className={popup.formGroup}>
+                <label>Children</label>
+                <input type="number" name="child" className={popup.formControl} value={CheckIn.child} onChange={handleChange} />
+            </div>
+            <button type="button" className={popup.submitAvailability} onClick={checkInNow}>Check Now</button>
+        </div>
+    );
+
+    const [CheckIn, setCheckIn] = useState({
+        checkIn: '',
+        checkOut: '',
+        child: 0,
+        adult: 0,
+        totalPrice: 0,
+        night:0
+    })
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCheckIn(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
+    const [HotelData, setHotelData] = useState([]);
+    const [ButtonPopup, setButtonPopup] = useState(false);
+    const [ConfirmPopup, setConfirmPopup] = useState(false);
+
+
+    function book(data) {
+        setCheckIn('')
+        setCheckIn(0)
+        setHotelData(data)
+        setButtonPopup(true)
+    }
+    function checkInNow() {
+        if(CheckIn.checkIn !== '' && CheckIn.checkOut !== ''){
+            var start = new Date(CheckIn.checkIn)
+            var end = new Date(CheckIn.checkOut)
+            CheckIn.night = ((end.getTime() - start.getTime()) / (24 * 3600 * 1000))
+            CheckIn.totalPrice = ((end.getTime() - start.getTime()) / (24 * 3600 * 1000)) * HotelData.price;
+            setButtonPopup(false);
+            navigate('/confirmation', { state: { data: CheckIn, hotelData: HotelData} });
+        }
+    }
+
     return(
         <div className="container">
             <div className="top">
-                <img src="" alt="" />
+                <img src={bg} alt="" />
             </div>
             
             <div className="links">
@@ -51,15 +130,15 @@ function Luxury(props){
                 <p>Get 20% discount when you book 3 family rooms</p>
             </div>
 
-            <div className="search">
+            {/*<div className="search">
                 <input type="date" placeholder="Check in date" className="in" required
                 onChange={handleCheckIn} value={checkIn}/>
                 <input type="date" placeholder="Check out date" className="out" required
                 onChange={handleCheckOut} value={checkOut}/>
                 <button type="button" placeholder="Search" className="nyaka" onClick={handleSubmit}> Search </button>
-            </div>
+    </div>*/}
 
-            <div><h1 style={{marginTop: '2%'}}>Room Booking</h1></div>
+            <div><h1 style={{marginTop: '10%'}}>Room Booking</h1></div>
 
             <div className="types">
                 <table>
@@ -69,16 +148,14 @@ function Luxury(props){
                             <td>Qty</td>
                             <td>Services</td>
                             <td>Initial Amount</td>
-                            <td>Amount</td>
                         </tr>
                     </thead>
                     <tbody>
                         
                         
                         <tr>
-                            <td>
                                 Family room gives you<br></br> enough space and confortability<br></br> to make your family not wanna leave
-                            </td>
+                            
                             <td>1</td>
                             <td>
                                 <p>Breakfast, Lunch, Dinner,<br></br>
@@ -86,7 +163,7 @@ function Luxury(props){
                                 </p>
                             </td>
                             <td>ZAR 1800</td>
-                            <td>
+                            {/*<td>
 
                                 <br></br><br></br>
                             <section className="py-4 container">
@@ -105,7 +182,7 @@ function Luxury(props){
                                     })}
                                 </div>
                             </section>
-                            </td>
+                                </td>*/}
                         </tr>
                         <tr >
                             <td>
@@ -125,14 +202,39 @@ function Luxury(props){
                 
             </div>
 
-            <span>
+            {/*<span>
                 <Link to="/cart">ADDED ROOM</Link>
-            </span>
+                            </span>
             <div>
                 <Cart chechIn={checkIn} checkOut={checkOut}/>
-            </div>
+            </div>*/}
         
-
+        <div className={homeBook.main}>
+            <br />
+            <div className={homeBook.content}>
+                <div className={homeBook.hotelList}>
+                    {Hotel.map((listHotels, xId) => (
+                        <div className={homeBook.hotel} key={xId}>
+                            <div className={homeBook.image} onClick={() => gallery(listHotels)}>
+                                <img src={listHotels.hotel} alt={listHotels.alt} />
+                            </div>
+                            <div className={homeBook.description} onClick={() => gallery(listHotels)}>
+                                <h3>{listHotels.name}</h3><br />
+                                <label>location: {listHotels.location}</label><br />
+                                <label>R {listHotels.price} {listHotels.duration}</label><br /><br />
+                                <label>{listHotels.description}</label>
+                            </div>
+                            <div className={homeBook.bookbtn}>
+                                <button className={homeBook.btn} onClick={() => book(listHotels)}>Book</button>
+                                <PopUpBook trigger={ButtonPopup} setTrigger={setButtonPopup}>
+                                    {bookPopUp}
+                                </PopUpBook>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
         </div>
     )
 }

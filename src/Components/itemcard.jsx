@@ -8,11 +8,11 @@ const Itemcard = (props) =>{
     
     const { addItem } = useCart();
 
-    /*const item=()=>{
+    const item=()=>{
         addItem(props.item);
         alert("Booking reserved, proceed to checkout")
-    }*/
-    
+    }
+    /*
 
             const [title, setTitle] = useState('');
             const [price, setPrice] = useState('');
@@ -41,6 +41,7 @@ const Itemcard = (props) =>{
                     theCheckOut:theCheckOut
                     
                 };
+                
 
                 console.log(transaction)
                 addItem(props.item)
@@ -56,7 +57,7 @@ const Itemcard = (props) =>{
         
                 //props.add(title, price, desc);
                 
-            })
+            })*/
 
 
     return(
@@ -68,7 +69,7 @@ const Itemcard = (props) =>{
                     <h5 hidden className="card-title">R{props.price}</h5>
                     
                     <p className="card-text">{props.desc}</p>
-                    <button className="btn btn-success" onClick={add}>
+                    <button className="btn btn-success" onClick={item}>
                         Booking
                     </button>
                 </div>
