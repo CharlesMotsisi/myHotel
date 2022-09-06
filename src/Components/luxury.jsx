@@ -16,6 +16,7 @@ import homeBook from './PopUpBook/Home_Booking.module.css';
 
 function Luxury(props){
     const [checkOut, setCheckOut] = useState("");
+    const navigate = useNavigate();
 
 
     const handleCheckIn = (e) =>{
@@ -27,23 +28,59 @@ function Luxury(props){
         
     }
 
-    const handleSubmit = () => {
-        
-    }
-
     //Added Items
     
-    const navigate = useNavigate()
     const [Hotel, setHotel] = useState([])
-    function gallery(data) {
-        navigate('/hotel_info', { state: { data: data } })
+    //const usersCollectionRef = collection(db, "hotel")
+   /* useEffect(() => {
+        const getHotels = async () => {
+            const data = await getDocs(usersCollectionRef);
+            setHotel(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        }
+        getHotels();
+    }, []);*/
+
+    const [CheckIn, setCheckIn] = useState({
+        checkIn: '',
+        checkOut: '',
+        child: 0,
+        adult: 0,
+        totalPrice: 0,
+        night:0
+    })
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCheckIn(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
     }
 
+    const [HotelData, setHotelData] = useState([]);
+    const [ButtonPopup, setButtonPopup] = useState(false);
+    //const [ConfirmPopup, setConfirmPopup] = useState(false);
+
+
+    function book(data) {
+        setCheckIn('')
+        setCheckIn(0)
+        setHotelData(data)
+        setButtonPopup(true)
+    }
+    function checkInNow() {
+        if(CheckIn.checkIn !== '' && CheckIn.checkOut !== ''){
+            var start = new Date(CheckIn.checkIn)
+            var end = new Date(CheckIn.checkOut)
+            CheckIn.night = ((end.getTime() - start.getTime()) / (24 * 3600 * 1000))
+            CheckIn.totalPrice = ((end.getTime() - start.getTime()) / (24 * 3600 * 1000)) * HotelData.price;
+            setButtonPopup(false);
+            navigate('/Payment', { state: { data: CheckIn, hotelData: HotelData} });
+        }
+    }
     let bookPopUp = (
         <div className={popup.popup}>
             <div className={popup.header}>
-                <h3>R {HotelData.price}</h3>
-                <label>/ {HotelData.duration}</label>
+                <h3>Select Dates</h3>
             </div>
             <div className={popup.formGroup}>
                 <label>Check-in Date <span>*</span></label>
@@ -68,43 +105,8 @@ function Luxury(props){
         </div>
     );
 
-    const [CheckIn, setCheckIn] = useState({
-        checkIn: '',
-        checkOut: '',
-        child: 0,
-        adult: 0,
-        totalPrice: 0,
-        night:0
-    })
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCheckIn(prevState => ({
-            ...prevState,
-            [name]: value
-        }))
-    }
-
-    const [HotelData, setHotelData] = useState([]);
-    const [ButtonPopup, setButtonPopup] = useState(false);
-    const [ConfirmPopup, setConfirmPopup] = useState(false);
-
-
-    function book(data) {
-        setCheckIn('')
-        setCheckIn(0)
-        setHotelData(data)
-        setButtonPopup(true)
-    }
-    function checkInNow() {
-        if(CheckIn.checkIn !== '' && CheckIn.checkOut !== ''){
-            var start = new Date(CheckIn.checkIn)
-            var end = new Date(CheckIn.checkOut)
-            CheckIn.night = ((end.getTime() - start.getTime()) / (24 * 3600 * 1000))
-            CheckIn.totalPrice = ((end.getTime() - start.getTime()) / (24 * 3600 * 1000)) * HotelData.price;
-            setButtonPopup(false);
-            navigate('/confirmation', { state: { data: CheckIn, hotelData: HotelData} });
-        }
-    }
+    
+    
 
     return(
         <div className="container">
@@ -162,7 +164,7 @@ function Luxury(props){
                                    Massage,Swimming Pool,Wifi<br></br>
                                 </p>
                             </td>
-                            <td>ZAR 1800</td>
+                            <td>ZAR 2500</td>
                             {/*<td>
 
                                 <br></br><br></br>
@@ -194,7 +196,7 @@ function Luxury(props){
                                    Massage,Swimming Pool,Wifi<br></br>
                                 </p>
                             </td>
-                            <td>ZAR 3600</td>
+                            <td>ZAR 5200</td>
                             
                 </tr>
                     </tbody>
@@ -213,19 +215,18 @@ function Luxury(props){
             <br />
             <div className={homeBook.content}>
                 <div className={homeBook.hotelList}>
-                    {Hotel.map((listHotels, xId) => (
-                        <div className={homeBook.hotel} key={xId}>
-                            <div className={homeBook.image} onClick={() => gallery(listHotels)}>
-                                <img src={listHotels.hotel} alt={listHotels.alt} />
+                    {data.productData.map((item, index)=>(
+                        <div className={homeBook.hotel} key={index}>
+                            <div className={homeBook.image} /*onClick={() => gallery(listHotels)}*/>
+                               <Link to="/HotelInfo"> <img src="luxury.jpeg" alt="" /></Link>
                             </div>
-                            <div className={homeBook.description} onClick={() => gallery(listHotels)}>
-                                <h3>{listHotels.name}</h3><br />
-                                <label>location: {listHotels.location}</label><br />
-                                <label>R {listHotels.price} {listHotels.duration}</label><br /><br />
-                                <label>{listHotels.description}</label>
+                            <div className={homeBook.description} /*onClick={() => gallery(listHotels)}*/>
+                                <h3>{item.title}</h3><br />
+                                <label>R {item.price}</label><br /><br />
+                                <label>{item.desc}</label>
                             </div>
                             <div className={homeBook.bookbtn}>
-                                <button className={homeBook.btn} onClick={() => book(listHotels)}>Book</button>
+                                <button className={homeBook.btn} onClick={() => book(item)}>Book</button>
                                 <PopUpBook trigger={ButtonPopup} setTrigger={setButtonPopup}>
                                     {bookPopUp}
                                 </PopUpBook>

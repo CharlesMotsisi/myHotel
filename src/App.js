@@ -24,6 +24,8 @@ import Family from './Components/family';
 import Luxury from './Components/luxury';
 import Deluxe from './Components/deluxe';
 import Standard from './Components/standard';
+import dates from './Components/bookPopUp'
+import HotelInfo from './Components/HotelInfo/HotelInfo'
 
 
 function App() {
@@ -50,6 +52,7 @@ function App() {
         <Route path="/bookings" element={<AdminBookings/>} />
         <Route path="/earnings" element={<Earnings/>} />
         <Route path="/rooms" element={<RoomsAvailable/>} />
+        <Route path="/HotelInfo" element={<HotelInfo/>}/>
 
 
 

@@ -2,21 +2,12 @@
 import { useLocation } from 'react-router-dom';
 import hotelInfo from './HotelInfo.module.css';
 import { useEffect, useState } from 'react';
-import 'react-bootstrap';
-function HotelInfo() {
-    const [Gallery, setGallery] = useState([])
-    const [HotelData, setHotelData] = useState('')
-    const { state } = useLocation();
-    const { data } = state;
-    useEffect(() => {
 
-        setHotelData(data)
-        setGallery(data.gallary)
-    })
+function HotelInfo() {
 
     return (
         <div className={hotelInfo.main}>
-                <h2>{HotelData.name}</h2>
+                <h2>Bopline Hotel</h2>
 
             <div className={hotelInfo.details}>
                 <div className={hotelInfo.descptive}>
@@ -25,37 +16,41 @@ function HotelInfo() {
                         <tbody>
                             <tr>
                                 <td>Amenities:</td>
-                                <td>{HotelData.amenities}</td>
+                                <td>air-conditioning, free wi-fi, hairdryer, <br></br>
+                                in-room safety, laundry, minibar, <br></br>
+                                telephone, microwave, cable</td>
                             </tr>
                             <tr>
                                 <td>View:</td>
-                                <td>{HotelData.view}</td>
+                                <td>Swimming Pool</td>
                             </tr>
                             <tr>
                                 <td>Size:</td>
-                                <td>{HotelData.size}</td>
+                                <td>30x40</td>
                             </tr>
                             <tr>
                                 <td>Bed Type:</td>
-                                <td>{HotelData.bedType}</td>
+                                <td>Double bed</td>
                             </tr>
                             <tr>
                                 <td>Categories:</td>
-                                <td>{HotelData.categories}</td>
+                                <td>Luxury Room</td>
                             </tr>
                         </tbody>
                     </table>
                     <div className={hotelInfo.summary}>
-                        <p>{HotelData.descriptive}</p>
+                        <p>Luxury rooms with a great feel of<br></br>
+                        home at an elevated level. Get the<br></br>
+                        best views and comfort at a very <br></br>
+                        affordable price</p>
                     </div>
                 </div>
 
                 <div className={hotelInfo.pictures}>
-                    {Gallery.map((theGallery, xid) => (
-                        <div className={hotelInfo.gallery} key={xid}>
-                            <img src={theGallery} alt={HotelData.name} />
-                        </div>
-                    ))}
+                    <img src='double luxury.jpg' alt=''/>
+                    <img src='luxury.jpeg' alt=''/>
+                    <img src='luxury2.jpg' alt=''/>
+                    <img src='luxury3.jpg' alt=''/>
                 </div>
             </div>
 
