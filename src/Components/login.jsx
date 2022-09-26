@@ -15,6 +15,7 @@ function Login(){
         signInWithEmailAndPassword(auth, email, password).then(()=>{
             // alert("Welcome back")
             history("/home");
+            
         }).catch(()=>{
             console.log("Wrong details");
             alert("Wrong details entered, Please enter the correct details");

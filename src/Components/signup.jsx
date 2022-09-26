@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../configure/firebase";
-
+import {db} from '../configure/firebase'
+import {addDoc, collection} from 'firebase/firestore'
 
 
 const SignUp = () => {
@@ -15,13 +16,28 @@ const SignUp = () => {
 
     let history = useNavigate();
 
+    
     const register = () =>{
+        const collectionRef = collection(db, "Users");
+
+    const user ={
+        email:email,
+        name:name,
+        surname:surname,
+        number:number
+     }
         createUserWithEmailAndPassword(auth, email, name, surname, number, password).then(()=>{
+            addDoc(collectionRef, user).then(()=>{
+                alert("Added successfully");
+            }).catch((err)=>{
+                console.log(err);
+            })
             history("/home");
         }).catch((error)=>{
             console.log(error);
             alert("Error!!!");
         })
+        
     }
 
 

@@ -7,39 +7,80 @@ import Data from "../data.json"
 import Itemcard from "./itemcard";
 import data from "./datal";
 import Cart from "./cart";
+import {db} from '../configure/firebase'
+import {addDoc, collection, getDocs,doc, getDoc} from 'firebase/firestore'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import PopUpBook from './PopUpBook/PopUpBook';
 import popup from './popup.module.css'
 import { useNavigate } from 'react-router-dom'
 import homeBook from './PopUpBook/Home_Booking.module.css';
+import { async } from '@firebase/util';
+import { useEffect } from 'react';
 
 
 function Luxury(props){
     const [checkOut, setCheckOut] = useState("");
     const navigate = useNavigate();
+    const [Hotel, setHotel] = useState([])
+
+    useEffect(()=>{
+        const getData = async () =>{
+            const roomPrice = await getDocs(collection(db,"Rooms"));
+            console.log(roomPrice)
+        };
+        getData();
+    },[])
 
 
-    const handleCheckIn = (e) =>{
-        setCheckIn(e.target.value);
-        
-    }
-    const handleCheckOut = (e) =>{
-        setCheckOut(e.target.value);
-        
-    }
+   
+
 
     //Added Items
     
-    const [Hotel, setHotel] = useState([])
-    //const usersCollectionRef = collection(db, "hotel")
-   /* useEffect(() => {
-        const getHotels = async () => {
-            const data = await getDocs(usersCollectionRef);
-            setHotel(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-        }
-        getHotels();
-    }, []);*/
+   
+    //const usersCollectionRef = collection(db, "Reservation")
+    const retrieve= () => {
+      const docRef = doc(db,"Reservation")
+      const docSnap = getDoc(docRef);
+      console.log(docSnap);  
+     
+    };
+    const checkUser = () =>{
+        data.productData.map((item, index)=>{
+            let price = item.price;
+            console.log(price);
+        })
+       console.log(data);
+        //const querySnapshot = getDocs(collection(db, "Reservation"));
+        
+        //const collectionRef = collection(db, "Reservation");
+       
+        
+        //console.log(Hotel);
+        /*collectionRef.map((rev,index)=>{
+            if(rev.CheckIn===CheckIn.checkIn){
+                alert("Room Booked for this check in day, select anothger day")
+            }else{*/
+                /*const reserve = {
+                        checkin:CheckIn.checkIn,
+                        checkout:CheckIn.checkOut,
+                        adult:CheckIn.adult,
+                        child:CheckIn.child,
+                        //price:CheckIn.totalPrice
+            
+                };
+                addDoc(usersCollectionRef, reserve).then(()=>{
+                    alert("Successfully Booked");
+                }).catch((err)=>{
+                    console.log(err);
+                })*/
+        
+            //}
+        //})
+       
 
+    }
     const [CheckIn, setCheckIn] = useState({
         checkIn: '',
         checkOut: '',
@@ -74,8 +115,11 @@ function Luxury(props){
             CheckIn.night = ((end.getTime() - start.getTime()) / (24 * 3600 * 1000))
             CheckIn.totalPrice = ((end.getTime() - start.getTime()) / (24 * 3600 * 1000)) * HotelData.price;
             setButtonPopup(false);
-            navigate('/Payment', { state: { data: CheckIn, hotelData: HotelData} });
+            //navigate('/Payment', { state: { data: CheckIn, hotelData: HotelData} });
         }
+
+        
+
     }
     let bookPopUp = (
         <div className={popup.popup}>
@@ -101,7 +145,7 @@ function Luxury(props){
                 <label>Children</label>
                 <input type="number" name="child" className={popup.formControl} value={CheckIn.child} onChange={handleChange} />
             </div>
-            <button type="button" className={popup.submitAvailability} onClick={checkInNow}>Check Now</button>
+            <button type="button" className={popup.submitAvailability} onClick={retrieve}>Check Now</button>
         </div>
     );
 
