@@ -11,15 +11,13 @@ function Login(){
     const [password, setPassword] = useState('');
 
     let history = useNavigate();
-    const login =(()=>{
+    const login = (() =>{
         signInWithEmailAndPassword(auth, email, password).then(()=>{
-            // alert("Welcome back")
-            history("/home");
-            
-        }).catch(()=>{
-            console.log("Wrong details");
-            alert("Wrong details entered, Please enter the correct details");
+            history.push("/home");
+        }).catch((err)=>{
+            alert('Error logging in, review you username and password')
         })
+       
     })
 
     return(
@@ -28,7 +26,7 @@ function Login(){
             <h1>Login</h1>
 
             <input type="email" placeholder="Please Enter your email" onChange={(e)=>setEmail(e.target.value)}/><br></br>
-            <input type="email" placeholder="Please Enter your Password" onChange={(e)=>setPassword(e.target.value)}/><br></br>
+            <input type="password" placeholder="Please Enter your Password" onChange={(e)=>setPassword(e.target.value)}/><br></br>
 
             <button style={{width: '150px', height: '30px'}} onClick={login}>Login</button><br></br><br></br>
 

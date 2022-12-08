@@ -297,6 +297,7 @@
 .footer-icons img{
     width: 1vw;
     padding-left: 1vw;
+    height: 2vh;
 }
 .copyright{
    font-size: 8px;
